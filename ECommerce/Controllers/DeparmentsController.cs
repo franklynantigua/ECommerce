@@ -51,8 +51,27 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Deparments.Add(deparment);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "there are record the same   value ");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+
+                    return View(deparment);
+
+                }
             }
 
             return View(deparment);
@@ -83,9 +102,29 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(deparment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "there are record the same   value ");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+
+                    return View(deparment);
+
+                }
             }
+
             return View(deparment);
         }
 
@@ -111,8 +150,27 @@ namespace ECommerce.Controllers
         {
             Deparment deparment = db.Deparments.Find(id);
             db.Deparments.Remove(deparment);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception  ex )
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty,"The record be delete bacause related record");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty,ex.Message);
+                }
+
+                return View(deparment);
+
+            }
         }
 
         protected override void Dispose(bool disposing)

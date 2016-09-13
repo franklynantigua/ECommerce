@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace ECommerce.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CompaniesController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
@@ -15,7 +16,14 @@ namespace ECommerce.Controllers
         // GET: Companies
         public ActionResult Index()
         {
-            var companies = db.Companies.Include(c => c.City).Include(c => c.Deparment);
+            var user=db.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var companies = db.Companies.Where(c => c.CompanyId== user.CompanyId);
+
+
             return View(companies.ToList());
         }
 

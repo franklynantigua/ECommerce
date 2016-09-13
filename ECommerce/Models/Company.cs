@@ -31,6 +31,9 @@ namespace ECommerce.Models
       
         [DataType(DataType.ImageUrl)]
         public string Logo { get; set; }
+        [NotMapped]// para no enviar este campo a la base de datos,es decir, solo temporal!
+        public HttpPostedFileBase LogoFile { get; set; }
+
 
 
         [Required(ErrorMessage = "The  field  {0} is requiered ")]
@@ -39,14 +42,16 @@ namespace ECommerce.Models
 
          public int CityId { get; set; }
 
-        [NotMapped]// para no enviar este campo a la base de datos,es decir, solo temporal!
-        public HttpPostedFileBase LogoFile { get; set; }
-
+        
 
         public virtual Deparment Deparment { get; set; }
         public virtual City City { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
 
+        public virtual ICollection<Category> Categories { get; set; }
+
+        public virtual ICollection<Tax> Taxes { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

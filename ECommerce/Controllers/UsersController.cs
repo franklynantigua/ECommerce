@@ -11,6 +11,7 @@ using ECommerce.Models;
 
 namespace ECommerce.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
@@ -111,10 +112,26 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,UserName,FirstName,LastName,Phone,Address,Photo,DepartmentId,CityId,CompanyId")] User user)
+        public ActionResult Edit( User user)
         {
             if (ModelState.IsValid)
             {
+               /* if (user.PhotoFile != null)
+                {
+
+                    var folder = "~/Content/Users";
+                    var file = string.Format("{0}.jpg", user.UserId);
+                    var response = FilesHelper.UploadPhoto(user.PhotoFile, folder, file);
+                }*/
+
+                var db2 =new ECommerceContext();
+                var currenUser = db2.Users.Find(user.UserId);
+                if (currenUser.UserName != user.UserName)
+                {
+                    UsersHelper.UpdateUserName(currenUser.UserName, user.UserName);
+                }
+                db2.Dispose();
+
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -132,7 +149,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            var user = db.Users.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -145,9 +162,10 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
+            var  user = db.Users.Find(id);
             db.Users.Remove(user);
             db.SaveChanges();
+            UsersHelper.DeleteUser(user.UserName);
             return RedirectToAction("Index");
         }
 

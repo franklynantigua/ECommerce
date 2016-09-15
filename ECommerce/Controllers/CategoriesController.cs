@@ -22,10 +22,6 @@ namespace ECommerce.Controllers
         public ActionResult Index()
         {
           var  user = db.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            if (user == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             var categories = db.Categories.Where(c => c.CompanyId == user.CompanyId);
             return View(categories.ToList());
         }

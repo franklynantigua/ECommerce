@@ -42,13 +42,13 @@ namespace ECommerce.Models
 
 
         [Required(ErrorMessage = "The  field  {0} is requiered ")]
-        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
-        [Range(0, 1, ErrorMessage = "You must select a {0} between {1} and {2}")]
+        [Range(1,double.MaxValue, ErrorMessage = "You must select a {0}")]
+        [Display(Name = "Tax")]
         public int TaxId { get; set; }
 
 
         [Required(ErrorMessage = "The  field  {0} is requiered ")]
-        [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = false)]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         [Range(0, double.MaxValue, ErrorMessage = "You must select a {0} between {1} and {2}")]
         public decimal Price { get; set; }
 
@@ -56,14 +56,27 @@ namespace ECommerce.Models
         [DataType(DataType.ImageUrl)]
         public string Image { get; set; }
         [NotMapped]// para no enviar este campo a la base de datos,es decir, solo temporal!
+        [Display(Name = "Image")]
         public HttpPostedFileBase ImageFile { get; set; }
 
         [DataType(DataType.MultilineText)]
-        public int Remarks { get; set; }
+        public string Remarks { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
+        public double Stock
+        {
+            get { return Inventories.Sum(i => i.Stock); }
+        }
+    
         public virtual Company Company { get; set; }
 
         public virtual Category Category { get; set; }
 
         public virtual Tax Tax { get; set; }
+        public virtual ICollection<Inventory> Inventories { get; set; }
+
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
+        public virtual ICollection<OrderDetailTmp> OrderDetailTmps { get; set; }
     }
 }

@@ -46,17 +46,15 @@ namespace ECommerce.Models
         [DataType(DataType.ImageUrl)]
         public string Photo { get; set; }
 
-
-
         [Required(ErrorMessage = "The  field  {0} is requiered ")]
         [Range(1, double.MaxValue, ErrorMessage = "You must select a {0}")]
         [Display(Name = "Department")]
         public int DepartmentId { get; set; }
 
-
+        [Required(ErrorMessage = "The  field  {0} is requiered ")]
+        [Range(1, double.MaxValue, ErrorMessage = "You must select a {0}")]
         [Display(Name = "City")]
         public int CityId { get; set; }
-
         [Display(Name = "Company")]
         public int CompanyId { get; set; }
 
